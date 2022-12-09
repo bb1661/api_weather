@@ -11,28 +11,28 @@ import (
 
 // A Response struct to map the Entire Response
 type Response struct {
-	latitude              float64 `json:"latitude"`
-	longitude             float64
-	generationtime_ms     float64
-	utc_offset_seconds    float64
-	timezone              string
-	timezone_abbreviation string
-	elevation             float64
-	weather               current_weather `json:"current_weather"`
+	Latitude              float64 `json:"latitude"`
+	Longitude             float64
+	Generationtime_ms     float64
+	Utc_offset_seconds    float64
+	Timezone              string
+	Timezone_abbreviation string
+	Elevation             float64
+	Weather               current_weather `json:"current_weather"`
 }
 
 // A Pokemon Struct to map every pokemon to.
 type current_weather struct {
-	temperature   float64 `json:"temperature"`
-	windspeed     float64
-	winddirection float64
-	weathercode   int
-	time          string
+	Temperature   float64 `json:"temperature"`
+	Windspeed     float64
+	Winddirection float64
+	Weathercode   int
+	Time          string
 }
 
 func main() {
 	//response, err := http.Get("http://pokeapi.co/api/v2/pokedex/kanto/")
-	response, err := http.Get("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true")
+	response, err := http.Get("https://api.open-meteo.com/v1/forecast?latitude=55.7522&longitude=37.6156&current_weather=true")
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
@@ -43,10 +43,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println([]byte(responseData))
+	fmt.Println(string(responseData))
 	var responseObject Response
-	json.Unmarshal([]byte(responseData), &responseObject)
+	if err := json.Unmarshal(responseData, &responseObject); err != nil {
+		panic(err)
+	}
 
-	fmt.Println(responseObject.latitude)
+	fmt.Println(responseObject.Weather.Temperature)
 
 }
